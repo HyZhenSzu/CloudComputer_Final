@@ -3,5 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/ChatGLM/ChatGLM3" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/GPT_gleam" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/GPT_gleam/gpt-gleam" vcs="Git" />
   </component>
 </project>
