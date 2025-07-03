@@ -18,7 +18,8 @@ class DataPreprocessor:
         self.file_path = path_of_file
         self.texts = []
         self.labels = []
-        self.max_samples = max_samples  # 最多加载的文本数，None表示不限制
+        self.post_image_ids = []
+        self.max_samples = max_samples  # 最多加载的数据量，None则全部加载
         self.processed_texts = []
         self.stop_words = set(stopwords.words('english'))
         self.lemmatizer = WordNetLemmatizer()
@@ -35,8 +36,15 @@ class DataPreprocessor:
         """返回 (text, label) 的 zip 数据"""
         return list(zip(self.texts, self.labels))
 
+    def get_dataset_with_images(self):
+        """返回 (text, image_ids, label)的zip数据"""
+        return list(zip(self.texts, self.post_image_ids, self.labels))
+
     def get_processed_texts(self):
         return self.processed_texts
+
+    def get_image_ids(self):
+        return self.post_image_ids
 
     def get_processed_dataset(self):
         """预处理后的 tokens + 标签"""
@@ -48,8 +56,11 @@ class DataPreprocessor:
             reader = csv.DictReader(f, delimiter='\t')
             for row in reader:
                 text = row['post_text'].strip()
-                label_str = row['label'].strip().lower()
 
+                image_id_raw = row['image_id(s)'].strip()
+                image_ids = [img.strip() for img in image_id_raw.split(',') if img.strip()]
+
+                label_str = row['label'].strip().lower()
                 if label_str == 'fake':
                     label = 0
                 elif label_str == 'real':
@@ -59,6 +70,7 @@ class DataPreprocessor:
                     continue
 
                 self.texts.append(text)
+                self.post_image_ids.append(image_ids)
                 self.labels.append(label)
 
                 # 如果设置了最大条数限制并达到了数量，提前退出
@@ -71,7 +83,7 @@ class DataPreprocessor:
             print(f"====== 加载完成：共 {len(self.labels)} 条新闻 ======")
             print(f" 假新闻数量: {fake_count}")
             print(f" 真新闻数量: {real_count}")
-            print("  数据示例：", self.texts[0], "标签：", self.labels[0])
+            print("  数据示例：", self.texts[0], " 标签：", self.labels[0], " 图片id: ", self.post_image_ids[0])
 
             self.processed_texts = [self._preprocess_text(t) for t in self.texts]
 
