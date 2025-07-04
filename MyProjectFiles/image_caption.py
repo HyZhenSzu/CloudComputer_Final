@@ -36,7 +36,7 @@ class ImageCaptionGenerator:
         """
         为多个帖子生成图像描述文本（自动检测扩展名）。
 
-        :param image_id_lists: 每个帖子对应的图片 ID 列表（无扩展名）。如：[['img1', 'img2'], ['img3']]
+        :param image_id_lists: 每个帖子对应的图片 ID 列表
         :param sep: 多张图片之间连接的分隔符
         :return: 每个帖子的合并图像描述字符串列表
         """
